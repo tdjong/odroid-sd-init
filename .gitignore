@@ -1,0 +1,5 @@
+# image files
+*.img
+*.raw
+*.xz
+*.md5sum
