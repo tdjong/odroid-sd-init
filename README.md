@@ -48,3 +48,9 @@ https://wiki.odroid.com/odroid-xu4/software/ubuntu_nas/02_mount_hdds
 * https://ubuntu.com/tutorials/how-to-kubernetes-cluster-on-raspberry-pi#1-overview
 * https://opensource.com/article/20/6/kubernetes-raspberry-pi
 * https://blog.radwell.codes/2021/05/kubernetes-on-raspberry-pi/
+
+Bash tricks
+
+* https://www.cyberciti.biz/tips/bash-shell-parameter-substitution-2.html
+* https://tldp.org/LDP/abs/html/here-docs.html
+* 

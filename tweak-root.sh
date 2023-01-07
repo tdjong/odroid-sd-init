@@ -14,17 +14,18 @@ set -e
 # * Add SSH authorized keys for easy access (ansible?)
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-# shellcheck source=settings.ini
+# shellcheck source=/dev/null
 source "${SCRIPT_DIR}/settings.ini" 
 
 if [ ! -d "$MNTDIR/root" ]; then
   echo "No root partition mounted on $MNTDIR."
-  ls $MNTDIR
+  ls "$MNTDIR"
   exit 1
 fi
-cat $MNTDIR/etc/os-release
-# shellcheck disable=SC1090
-source $MNTDIR/etc/os-release
+MNTDIR=$MNTDIR/root
+cat "$MNTDIR/etc/os-release"
+# shellcheck source=/dev/null
+source "$MNTDIR/etc/os-release"
 
 cat << EOF > remotePrepare.sh 
 # Allow root to SSH with your authorized keys
@@ -57,14 +58,15 @@ uname -a
 cat /etc/os-release
 echo "Assuming qemu-user-static is installed and running"
 echo "Run next commands inside qemu on sdcard image"
-sudo chroot $MNTDIR /bin/uname -a
-sudo chroot $MNTDIR bash < remotePrepare.sh
+sudo chroot "$MNTDIR" /bin/uname -a
+sudo chroot "$MNTDIR" cat /etc/os-release
+sudo chroot "$MNTDIR" bash < remotePrepare.sh
 
 echo "Get and install authorized keys in boot image"
-curl https://github.com/${GitHubUser}.keys -o authorized_keys
-sudo cp authorized_keys $MNTDIR/root/.ssh/authorized_keys
-sudo cp authorized_keys $MNTDIR/home/${GitHubUser}/.ssh/authorized_keys
+curl "https://github.com/${GitHubUser}.keys" -o authorized_keys
+sudo cp authorized_keys "$MNTDIR/root/.ssh/authorized_keys"
+sudo cp authorized_keys "$MNTDIR/home/${GitHubUser}/.ssh/authorized_keys"
 
 echo "Checking installation of authorized keys"
-sudo ls -l $MNTDIR/root/.ssh/authorized_keys
-sudo ls -l $MNTDIR/home/${GitHubUser}/.ssh/authorized_keys
+sudo ls -l "$MNTDIR/root/.ssh/authorized_keys"
+sudo ls -l "$MNTDIR/home/${GitHubUser}/.ssh/authorized_keys"

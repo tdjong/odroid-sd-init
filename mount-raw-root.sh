@@ -8,9 +8,6 @@
 # * decompress raw
 # * mount raw partition
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-source "${SCRIPT_DIR}/settings.ini"
-
 if [ -z "$1" ]; then
   echo "Filename of RAW image is required"
   exit 1
@@ -21,17 +18,23 @@ if [ ! -f "$1" ]; then
 fi
 file "$1"
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+# shellcheck source=/dev/null
+source "${SCRIPT_DIR}/settings.ini"
+
 RAWFILE=$(basename "$1" .xz)
 fdisk -l "$RAWFILE"
 
-MNTDIR=~/mnt-root
+MNTDIR=${MNTDIR}/root
 echo
 echo "Select the root filesystem (probably the biggest ext4 linux partition)"
-read -p "Fdisk output - partition start: " partstart
-read -p "Fdisk output - Sector size: " sectorsize
+read -rp "Fdisk output - partition start: " partstart
+read -rp "Fdisk output - Sector size: " sectorsize
 echo "PartStart = $partstart and SectorSize = $sectorsize"
 ((offset=partstart*sectorsize))
 echo Offset = "$offset"
-mkdir $MNTDIR
-sudo mount -o loop,offset="$offset" "$RAWFILE" $MNTDIR
-ls -l $MNTDIR
+if [ ! -d "$MNTDIR" ]; then
+  mkdir -p "$MNTDIR"
+fi
+sudo mount -o loop,offset="$offset" "$RAWFILE" "$MNTDIR"
+ls -l "$MNTDIR"
