@@ -10,19 +10,23 @@ Future release maybe on k3s (kubernetes)
 * 8+ GB MicroSD for boot
 * HDD / SSD for data storage and future root filesystem
 * microsd adapter for PC
-* Debian/Ubuntu based PC
+* Debian/Ubuntu based OS for flashing
+* balenaEtcher or equivalent
+* list of authorized_keys to use
+* qemu-user-static for emulating armv7 on x64 infra
 
 ## Preparation
 
 * Download latest Ubuntu version for Odroid
-  https://wiki.odroid.com/odroid-xu4/os_images/linux/ubuntu_5.4/minimal/20210112
+  <https://wiki.odroid.com/odroid-xu4/os_images/linux/ubuntu_5.4/minimal/20210112>
+  <https://de.eu.odroid.in/ubuntu_22.04lts/XU3_XU4_MC1_HC1_HC2/>
 * Install qemu-user-static on PC (Windows with WSL2 or native Debian based Linux distribution)
 * Modify raw image from Linux distributie (prepare-raw.sh IMAGEFILE)
   * Configure SSHD server
   * Create local non-root user (no password set, passwordless login/sudo required)
   * Allow non-root user to sudo
   * Add SSH authorized keys for easy access (ansible?)
-* Write to microSD
+* Write to microSD - e.g. using balenaEtcher
 * Boot Odroid from microSD
 
 ## Inrichting en ansible ready maken
@@ -32,7 +36,7 @@ Future release maybe on k3s (kubernetes)
 
 ## Move root to SSD / HDD instead of MicroSD
 
-https://wiki.odroid.com/odroid-xu4/software/ubuntu_nas/02_mount_hdds
+<https://wiki.odroid.com/odroid-xu4/software/ubuntu_nas/02_mount_hdds>
 
 ## NAS software via ansible / docker of podman
 
@@ -43,14 +47,13 @@ https://wiki.odroid.com/odroid-xu4/software/ubuntu_nas/02_mount_hdds
 
 ## Bronnen
 
-* https://wiki.odroid.com/odroid-xu4/software/ubuntu_nas/
-* https://opensource.com/article/20/5/disk-image-raspberry-pi
-* https://ubuntu.com/tutorials/how-to-kubernetes-cluster-on-raspberry-pi#1-overview
-* https://opensource.com/article/20/6/kubernetes-raspberry-pi
-* https://blog.radwell.codes/2021/05/kubernetes-on-raspberry-pi/
+* <https://wiki.odroid.com/odroid-xu4/software/ubuntu_nas/>
+* <https://opensource.com/article/20/5/disk-image-raspberry-pi>
+* <https://ubuntu.com/tutorials/how-to-kubernetes-cluster-on-raspberry-pi#1-overview>
+* <https://opensource.com/article/20/6/kubernetes-raspberry-pi>
+* <https://blog.radwell.codes/2021/05/kubernetes-on-raspberry-pi/>
 
 Bash tricks
 
-* https://www.cyberciti.biz/tips/bash-shell-parameter-substitution-2.html
-* https://tldp.org/LDP/abs/html/here-docs.html
-* 
+* <https://www.cyberciti.biz/tips/bash-shell-parameter-substitution-2.html>
+* <https://tldp.org/LDP/abs/html/here-docs.html>

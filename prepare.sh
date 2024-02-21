@@ -1,5 +1,6 @@
 #!/bin/bash
 # Prepare Raw image for unattended boot
+
 # Requires:
 # * full linux distrution - not WSL1
 # * downloaded authorized keys for non-root account
@@ -12,7 +13,8 @@
 # * prepare root
 # * recompress boot & root
 
-los() (
+# local mount sd image
+lo-mount() (
   img="$1"
   dev="$(sudo losetup --show -f -P "$img")"
   echo "$dev"
@@ -26,7 +28,9 @@ los() (
     sudo mount "$part" "$dst"
   done
 )
-losd() (
+
+# local umount of sd image
+lo-umount() (
   dev="/dev/$1"
   for part in "$dev"?*; do
     if [ "$part" = "${dev}p*" ]; then
@@ -44,7 +48,7 @@ source "${SCRIPT_DIR}/settings.ini"
 
 if [ -z "$1" ]; then
   echo "Filename of RAW image is required"
-  ls -l "*.img*"
+  ls -l *.img*
   exit 1
 fi
 if [ ! -f "$1" ]; then
@@ -66,10 +70,10 @@ if [ ! -f "$RAWFILE" ]; then
 fi
 
 set -x
-set -e 
+set -e
 
 file "$RAWFILE"
-loopdev=$(los "$RAWFILE")
+loopdev=$(lo-mount "$RAWFILE")
 loopdev=$(echo "$loopdev" | head -n 1)
 loopdev=${loopdev#/dev/}
 echo "loopdev = $loopdev"
@@ -89,6 +93,7 @@ ln -s "$HOME/mnt/${loopdev}p2" "$HOME/mnt/root"
 ./tweak-boot.sh
 ./tweak-root.sh
 
-losd "$loopdev"
+read -p "Please check $HOME/mnt/boot and $HOME/mnt/root. Press ENTER to continue"
+lo-umount "$loopdev"
 
 ./repackage.sh "$RAWFILE"

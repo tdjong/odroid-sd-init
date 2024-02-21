@@ -3,3 +3,4 @@
 *.raw
 *.xz
 *.md5sum
+remotePrepare.sh

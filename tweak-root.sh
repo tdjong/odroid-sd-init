@@ -28,7 +28,9 @@ cat "$MNTDIR/etc/os-release"
 source "$MNTDIR/etc/os-release"
 
 cat << EOF > remotePrepare.sh 
-# Allow root to SSH with your authorized keys
+#!/bin/bash
+# Goal: Allow root to SSH with your authorized keys
+# This script will be used in chrooted environment
 mkdir /root/.ssh
 # Download, or otherwise add to the authorized_keys file, your public keys
 # Replace the URL with the path to your own public keys

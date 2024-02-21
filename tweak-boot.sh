@@ -27,8 +27,14 @@ cd "$MNTDIR/boot/"
 ls -l
 
 echo "Odroid Ubuntu has bootargs in boot.ini"
+
 cat << 'EOF'
+# for containers (podman/minikube/docker)
 setenv containers "cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory"
+
+# SATA-to-USB bridge workaround (what is the right id? check lsusb)
+# Odroid HC1 value: 
+setenv hid_quirks "usb-storage.quirks=0x0bc2:0x2322:u"
 
 # Boot Args
 setenv bootargs "console=tty1 console=ttySAC2,115200n8 root=UUID=e139ce78-9841-40fe-8823-96a304a09859 rootwait \
@@ -38,4 +44,9 @@ EOF
 
 read -rp "Manually update $MNTDIR/boot/boot.ini. Press ENTER when you have the necessary code in your clipboard"
 EDITOR=${EDITOR:-vi}
-$EDITOR "$MNTDIR/boot/boot.ini"
+sudo cp "$MNTDIR/boot/boot.ini" "$MNTDIR/boot/boot.ini.$(date +%F)"
+sudo $EDITOR "$MNTDIR/boot/boot.ini"
+
+# optional move rootfs to USB disk (get UUID)
+echo "Support moving rootfs from SD to USB disk"
+echo "change boot.ini bootargs root parameter to new UUID on USB SSD/HDD partition"
